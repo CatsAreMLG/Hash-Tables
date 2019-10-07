@@ -53,7 +53,20 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        self.storage[index] = value
+        bucket = self.storage[index]
+        if bucket is None:
+            self.storage[index] = LinkedPair(key, value)
+        else:
+            node = self.storage[index]
+            while node is not None:
+                if node.key == key:
+                    node.value = value
+                    break
+                elif node.next == None:
+                    node.next = LinkedPair(key, value)
+                    break
+                else:
+                    node = node.next
 
     def remove(self, key):
         '''
@@ -75,7 +88,15 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        return self.storage[index]
+        bucket = self.storage[index]
+
+        if bucket is not None:
+            node = bucket
+            while node is not None:
+                if node.key == key:
+                    return node.value
+                else:
+                    node = node.next
 
     def resize(self):
         '''
